@@ -1,0 +1,1523 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" id="htmlTag">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Verification System · Benha University</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy-950: #060f1f;
+    --navy-900: #0b1f3a;
+    --navy-800: #15305a;
+    --gold-500: #d4af37;
+    --gold-400: #e6c766;
+    --ink-50: #f4f6fb;
+    --ink-200: #c9d3e4;
+    --ink-400: #8095b4;
+    --success: #10b981;
+    --danger: #ef4565;
+    --info: #4f8ef7;
+    --radius: 16px;
+    --radius-sm: 10px;
+    --shadow-lg: 0 24px 48px -12px rgba(2, 8, 20, 0.55);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    min-height: 100vh;
+    color: var(--ink-50);
+    font-family: 'Cairo', 'Inter', sans-serif;
+    background: radial-gradient(1200px 600px at 85% -10%, rgba(212,175,55,0.12), transparent 60%),
+                linear-gradient(160deg, var(--navy-950) 0%, var(--navy-900) 55%, var(--navy-800) 100%);
+    display: flex;
+    justify-content: center;
+    padding: 20px 10px;
+  }
+
+  .mono { font-family: 'JetBrains Mono', monospace; direction: ltr; display: inline-block; }
+  .wrapper { width: 100%; max-width: 1000px; }
+
+  .side-banner {
+    background: linear-gradient(180deg, rgba(212, 175, 55, 0.15), rgba(11, 31, 58, 0.4));
+    border: 1px solid rgba(212, 175, 55, 0.3);
+    border-radius: var(--radius);
+    padding: 15px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+  }
+  .side-banner h2 { color: var(--gold-400); font-size: 1.2rem; font-weight: 800; }
+  .side-banner p { color: var(--ink-200); font-size: 0.85rem; }
+
+  .card {
+    background: linear-gradient(180deg, rgba(21, 48, 90, 0.55), rgba(11, 31, 58, 0.65));
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .auth-card { max-width: 420px; margin: 5vh auto; text-align: center; }
+  .hidden { display: none !important; }
+
+  h1.brand { color: var(--gold-400); font-size: 1.5rem; font-weight: 800; margin-bottom: 4px; }
+  .subtitle { color: var(--ink-200); font-size: 0.88rem; margin-bottom: 20px; }
+  .eyebrow { text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.75rem; color: var(--gold-400); font-weight: 700; }
+
+  label { display: block; font-size: 0.82rem; color: var(--ink-400); margin: 12px 0 6px 0; text-align: start; }
+
+  input, select {
+    width: 100%; padding: 12px 14px; border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(6, 15, 31, 0.8); color: var(--ink-50);
+    font-size: 0.92rem; outline: none; transition: 0.2s;
+    font-family: inherit;
+  }
+  select option { background: var(--navy-900); color: #fff; }
+  input:focus, select:focus { border-color: var(--gold-500); box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18); }
+
+  button {
+    width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: none;
+    font-weight: 700; font-size: 0.92rem; cursor: pointer; color: var(--navy-950);
+    background: linear-gradient(180deg, var(--gold-400), var(--gold-500));
+    margin-top: 14px; transition: 0.2s;
+  }
+  button:hover { opacity: 0.9; transform: translateY(-1px); }
+
+  button.btn-danger { background: linear-gradient(180deg, #f2657f, var(--danger)); color: #fff; }
+  button.btn-success { background: linear-gradient(180deg, #22d3a0, var(--success)); color: #04241a; }
+  button.btn-blue { background: linear-gradient(180deg, #6fa5fb, var(--info)); color: #04142e; }
+  button.btn-ghost { background: rgba(255,255,255,0.08); color: var(--ink-200); border: 1px solid rgba(255,255,255,0.12); width: auto; padding: 8px 16px; margin: 0; }
+  button.btn-sm { width: auto; padding: 5px 12px; margin: 0; font-size: 0.78rem; }
+  button.btn-lang { background: rgba(212, 175, 55, 0.15); color: var(--gold-400); border: 1px solid rgba(212, 175, 55, 0.3); width: auto; padding: 6px 14px; margin: 0; font-size: 0.8rem; }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px; }
+  .doc-badge { background: rgba(212, 175, 55, 0.12); color: var(--gold-400); padding: 6px 16px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(212, 175, 55, 0.3); }
+
+  .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab { flex: 1; min-width: 90px; text-align: center; padding: 10px 8px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); color: var(--ink-200); cursor: pointer; font-weight: 600; }
+  .tab.active { background: linear-gradient(180deg, var(--gold-400), var(--gold-500)); color: var(--navy-950); font-weight: 800; }
+
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px; }
+  .section-box { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 18px; }
+  .section-title { color: var(--gold-400); font-size: 0.95rem; font-weight: 700; margin-bottom: 12px; }
+
+  .table-wrap { max-height: 300px; overflow-y: auto; border-radius: var(--radius-sm); border: 1px solid rgba(255,255,255,0.06); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: start; }
+  thead th { position: sticky; top: 0; background: var(--navy-900); color: var(--gold-400); padding: 10px 12px; font-size: 0.8rem; }
+  tbody td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.06); color: var(--ink-200); }
+
+  /* QR Modal */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(3, 8, 18, 0.8); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 200; }
+  .modal-body { background: linear-gradient(180deg, var(--navy-800), var(--navy-950)); border: 1px solid rgba(212, 175, 55, 0.3); border-radius: 20px; padding: 26px; text-align: center; max-width: 360px; width: 90%; }
+  .id-card { border-radius: 14px; padding: 18px; margin: 16px 0; background: linear-gradient(160deg, var(--navy-800), var(--navy-950)); border: 1px solid rgba(212, 175, 55, 0.35); }
+  .qr-frame { background: #fff; padding: 10px; border-radius: 12px; margin: 14px auto; width: 170px; height: 170px; display: flex; align-items: center; justify-content: center; }
+
+  .program-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; margin-top: 6px; }
+  .program-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(212,175,55,0.3); border-radius: var(--radius); padding: 22px 14px; text-align: center; cursor: pointer; color: var(--ink-50); transition: 0.2s; }
+  .program-card:hover { background: rgba(212,175,55,0.14); border-color: var(--gold-500); transform: translateY(-2px); }
+  .program-card .p-icon { font-size: 1.8rem; margin-bottom: 6px; }
+  .program-card .p-name { font-size: 1.05rem; font-weight: 800; color: var(--gold-400); }
+  .program-card .p-sub { font-size: 0.8rem; color: var(--ink-400); margin-top: 4px; }
+  .program-card .p-count { font-size: 0.78rem; color: var(--ink-200); margin-top: 8px; }
+  .backbar { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+  .ctx-line { background: rgba(212,175,55,0.1); border: 1px solid rgba(212,175,55,0.25); color: var(--gold-400); border-radius: var(--radius-sm); padding: 10px 12px; font-size: 0.88rem; font-weight: 700; }
+  .qr-frame img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; }
+  .hint { font-size: 0.8rem; color: var(--ink-400); line-height: 1.7; margin-bottom: 8px; }
+  #toastHost { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); z-index: 400; }
+  .toast { padding: 10px 20px; border-radius: 999px; font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 6px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+  .toast.success { background: var(--success); } .toast.error { background: var(--danger); }
+
+  /* ===== Attendance ===== */
+  #scanModal { z-index: 300; }
+  #checkinModal { z-index: 250; }
+  #okModal { z-index: 500; }
+  .att-live-head { display:flex; align-items:center; justify-content:center; gap:8px; color: var(--success); font-weight:800; margin-bottom:4px; flex-wrap:wrap; }
+  .live-dot { width:10px; height:10px; border-radius:50%; background: var(--success); box-shadow:0 0 0 0 rgba(16,185,129,.7); animation: pulse 1.6s infinite; }
+  @keyframes pulse { 70% { box-shadow:0 0 0 10px rgba(16,185,129,0); } 100% { box-shadow:0 0 0 0 rgba(16,185,129,0); } }
+  .att-qr { width: 280px; height: 280px; max-width: 100%; }
+  .att-bar { height: 6px; border-radius: 999px; background: rgba(255,255,255,0.1); overflow: hidden; margin: 8px auto 4px; max-width: 280px; }
+  .att-bar > div { height: 100%; width: 100%; background: linear-gradient(90deg, var(--success), var(--gold-400)); transition: width 1s linear; }
+  .att-sub { color: var(--ink-200); font-size: .85rem; text-align:center; }
+  .att-head { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; }
+  .pill { padding:4px 12px; border-radius:999px; font-size:.78rem; font-weight:800; }
+  .pill.live { background: rgba(16,185,129,.15); color: var(--success); border:1px solid rgba(16,185,129,.4); }
+  .pill.done { background: rgba(255,255,255,.08); color: var(--ink-200); border:1px solid rgba(255,255,255,.15); }
+  tr.att-new td { animation: flashRow 1.6s ease-out; }
+  @keyframes flashRow { from { background: rgba(16,185,129,.35); } to { background: transparent; } }
+
+  .ok-card { text-align:center; padding: 10px; }
+  .ok-circle {
+    width: 190px; height: 190px; border-radius: 50%; margin: 0 auto 18px;
+    border: 7px solid var(--success); background: rgba(16,185,129,.10);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
+    box-shadow: 0 0 0 10px rgba(16,185,129,.12), 0 0 40px rgba(16,185,129,.35);
+    animation: popIn .45s cubic-bezier(.2,1.4,.4,1);
+  }
+  .ok-circle svg { width: 84px; height: 84px; }
+  .ok-circle path { fill:none; stroke: var(--success); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 44; stroke-dashoffset: 44; animation: drawCheck .5s .25s ease forwards; }
+  .ok-circle span { color: var(--success); font-weight: 800; font-size: 1.15rem; letter-spacing: .02em; font-family: 'Inter', sans-serif; direction: ltr; }
+  @keyframes popIn { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes drawCheck { to { stroke-dashoffset: 0; } }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsQR/1.4.0/jsQR.min.js"></script>
+</head>
+<body>
+
+<div id="toastHost"></div>
+
+<div class="wrapper">
+
+  <!-- شاشة تسجيل الدخول -->
+  <div id="authScreen" class="card auth-card">
+    <div class="topbar" style="justify-content: flex-end; margin-bottom: 10px;">
+      <button type="button" onclick="toggleLang()" class="btn-lang" id="langBtn">English</button>
+    </div>
+    <div class="eyebrow" id="t_eyebrow">كلية التجارة · جامعة بنها</div>
+    <h1 class="brand" id="t_title">نظام التحقق الذكي</h1>
+    <p class="subtitle" id="t_subtitle">بوابة الدكاترة وأعضاء هيئة التدريس</p>
+
+    <div>
+      <p id="authWelcome" class="hidden" style="color:var(--gold-400); font-weight:800; font-size:1.05rem; margin-bottom:6px;"></p>
+
+      <div id="authUserBox">
+        <label id="t_lbl_username">اسم الدكتور (اسم المستخدم)</label>
+        <input type="text" id="docName" placeholder="أدخل اسمك هنا..." autocomplete="username" onkeydown="if(event.key==='Enter')handleAuth()">
+      </div>
+
+      <label id="t_lbl_password">كلمة السر</label>
+      <input type="password" id="docPass" placeholder="••••••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')handleAuth()">
+
+      <div id="authConfirmBox" class="hidden">
+        <label id="t_lbl_password2">تأكيد كلمة السر</label>
+        <input type="password" id="docPass2" placeholder="••••••••" autocomplete="new-password" onkeydown="if(event.key==='Enter')handleAuth()">
+      </div>
+
+      <button type="button" onclick="handleAuth()" id="t_btn_login">تسجيل الدخول</button>
+      <p id="authErr" style="color:var(--danger); font-size:0.85rem; margin-top:10px; font-weight:bold;"></p>
+      <p style="margin-top:12px;"><a href="#" id="authLink" onclick="authLinkClick(event)" style="color:var(--gold-400); font-size:0.85rem; font-weight:700;"></a></p>
+    </div>
+  </div>
+
+  <!-- الشاشة الرئيسية -->
+  <div id="mainApp" class="hidden">
+
+    <!-- شريط العنوان -->
+    <div class="side-banner">
+      <div style="font-size:1.8rem;">🎓</div>
+      <div>
+        <h2 id="sideCollege">كلية التجارة - جامعة بنها</h2>
+        <p id="sideUni">نظام إدارة وتحقق بيانات الطلاب الذكي</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="topbar">
+        <span id="docBadge" class="doc-badge"></span>
+        <div style="display: flex; gap: 8px;">
+          <button type="button" onclick="toggleLang()" class="btn-lang" id="langBtnApp">English</button>
+          <button type="button" onclick="logout()" class="btn-danger btn-ghost" id="t_btn_logout">تسجيل الخروج</button>
+        </div>
+      </div>
+
+      <!-- قائمة اختيار البرنامج -->
+      <div id="programPicker">
+        <div class="section-title" id="t_pick_title">اختر البرنامج الدراسي</div>
+        <p class="subtitle" id="t_pick_sub" style="margin-bottom:14px;">اضغط على البرنامج لعرض الفرق الدراسية (الأولى حتى الرابعة)</p>
+        <div class="program-grid" id="programGrid"></div>
+      </div>
+
+      <div id="workArea" class="hidden">
+      <div class="backbar">
+        <button type="button" onclick="backToPrograms()" class="btn-ghost" id="t_btn_back">← تغيير البرنامج</button>
+        <span id="progBadge" class="doc-badge"></span>
+      </div>
+
+      <!-- تبويب الفرق الدراسية -->
+      <div class="tabs">
+        <div class="tab active" id="g1" onclick="changeGrade('1')">الفرقة الأولى</div>
+        <div class="tab" id="g2" onclick="changeGrade('2')">الفرقة الثانية</div>
+        <div class="tab" id="g3" onclick="changeGrade('3')">الفرقة الثالثة</div>
+        <div class="tab" id="g4" onclick="changeGrade('4')">الفرقة الرابعة</div>
+      </div>
+
+      <div class="grid-2">
+        <!-- إضافة طالب -->
+        <div class="section-box">
+          <div class="section-title" id="t_sec_add">إضافة طالب جديد</div>
+
+          <label id="t_lbl_code">كود الطالب (ID)</label>
+          <input type="text" id="stId" placeholder="20260105">
+
+          <label id="t_lbl_name">اسم الطالب بالكامل</label>
+          <input type="text" id="stName" placeholder="...">
+
+          <div class="ctx-line" id="ctxLine" style="margin-top:12px;"></div>
+
+          <button type="button" onclick="addStudent()" class="btn-success" id="t_btn_save">حفظ الطالب</button>
+        </div>
+
+        <!-- فحص واستعلام -->
+        <div class="section-box">
+          <div class="section-title" id="t_sec_verify">فحص واستعلام سريع</div>
+          <label id="t_lbl_check">كود الطالب (ID)</label>
+          <input type="text" id="checkId" placeholder="...">
+          <button type="button" onclick="verifyStudent()" id="t_btn_check">استعلام الآن</button>
+          <button type="button" onclick="startScan()" class="btn-blue" id="t_btn_scan">📷 مسح QR</button>
+          <div id="verifyResult" style="margin-top:12px; font-size:0.9rem; font-weight:700;"></div>
+        </div>
+      </div>
+
+      <!-- ===== تسجيل الحضور بالـ QR ===== -->
+      <div class="section-box" style="margin-bottom:16px;" id="attSection">
+        <div class="section-title" data-t="title"></div>
+
+        <div id="attStartBox">
+          <label data-t="lecture_lbl"></label>
+          <input type="text" id="attLecture">
+          <button type="button" class="btn-success" onclick="startAttendance()" data-t="start"></button>
+        </div>
+
+        <div id="attLive" class="hidden" style="text-align:center;">
+          <div class="att-live-head"><span class="live-dot"></span><span data-t="live"></span><span id="attLectureName" style="color:var(--gold-400);"></span></div>
+          <div class="qr-frame att-qr"><img id="attQr" src="" alt="QR"></div>
+          <div class="att-sub"><span data-t="changes_in"></span> <b id="attRemain" class="mono" style="color:var(--gold-400);"></b> <span data-t="sec"></span></div>
+          <div class="att-bar"><div id="attBarFill"></div></div>
+          <button type="button" class="btn-danger" onclick="endAttendance()" data-t="end"></button>
+        </div>
+
+        <div id="attResult" class="hidden" style="margin-top:16px;">
+          <div class="att-head">
+            <div><b data-t="present"></b>: <b id="attCount" class="mono" style="color:var(--success);"></b> <span id="attPill" class="pill"></span></div>
+            <button type="button" class="btn-success btn-sm" onclick="exportAttendance()" data-t="export"></button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th data-t="th_name"></th><th data-t="th_code"></th><th data-t="th_time"></th></tr></thead>
+              <tbody id="attBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <button type="button" class="btn-blue" onclick="openCheckin()" data-t="student_mode" style="margin-top:14px;"></button>
+      </div>
+
+      <!-- استيراد من إكسل -->
+      <div class="section-box" style="margin-bottom:16px;">
+        <div class="section-title" id="t_imp_title">استيراد طلاب من شيت إكسل</div>
+        <p class="hint" id="t_imp_hint"></p>
+        <input type="file" id="excelFile" accept=".xlsx,.xls,.csv" onchange="importExcel(this)">
+      </div>
+
+      <!-- جدول الطلاب -->
+      <div class="section-box">
+        <div class="section-title" id="t_sec_list">كشف الطلاب المسجلين</div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th id="t_th_name">اسم الطالب</th>
+                <th id="t_th_code">الكود</th>
+                <th id="t_th_grade">الفرقة</th>
+                <th id="t_th_spec">التخصص</th>
+                <th style="text-align:center;" id="t_th_action">الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+          </table>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal مسح QR -->
+<div id="scanModal" class="modal-overlay hidden">
+  <div class="modal-body">
+    <div class="section-title" id="t_scan_title">مسح كود QR</div>
+    <video id="scanVideo" playsinline muted style="width:100%; border-radius:12px; background:#000;"></video>
+    <p class="hint" id="t_scan_hint" style="margin-top:10px;"></p>
+    <button type="button" onclick="stopScan()" class="btn-ghost" style="width:100%;" id="t_btn_scan_cancel">إلغاء</button>
+  </div>
+</div>
+
+<!-- Modal الـ QR Code -->
+<div id="qrModal" class="modal-overlay hidden">
+  <div class="modal-body">
+    <div class="id-card">
+      <div id="qrName" style="font-size:1.1rem; font-weight:700; color:#fff;"></div>
+      <div id="qrMeta" style="font-size:0.8rem; color:var(--ink-400); margin-top:4px;"></div>
+      <div id="qrIdDisplay" class="mono" style="color:var(--gold-400); margin-top:6px;"></div>
+    </div>
+    <div class="qr-frame">
+      <img id="qrImage" src="" alt="QR Code">
+    </div>
+    <button type="button" onclick="document.getElementById('qrModal').classList.add('hidden')" class="btn-ghost" style="width:100%;" id="t_btn_close_qr">إغلاق</button>
+  </div>
+</div>
+
+<!-- Modal تسجيل حضور الطالب -->
+<div id="checkinModal" class="modal-overlay hidden">
+  <div class="modal-body">
+    <div class="section-title" data-t="st_title"></div>
+    <label data-t="st_id"></label>
+    <input type="text" id="attStudentId" inputmode="numeric" autocomplete="off" onkeydown="if(event.key==='Enter')confirmPending()">
+    <p class="hint" id="attHint" style="margin-top:10px;"></p>
+    <button type="button" class="btn-blue" id="attScanBtn" onclick="scanForAttendance()" data-t="scan_att"></button>
+    <button type="button" class="btn-success hidden" id="attConfirmBtn" onclick="confirmPending()" data-t="confirm"></button>
+    <button type="button" class="btn-ghost" style="width:100%; margin-top:10px;" onclick="closeCheckin()" data-t="close"></button>
+  </div>
+</div>
+
+<!-- Modal نجاح التسجيل -->
+<div id="okModal" class="modal-overlay hidden">
+  <div class="modal-body">
+    <div class="ok-card">
+      <div class="ok-circle">
+        <svg viewBox="0 0 52 52"><path d="M14 27 L23 36 L39 17"/></svg>
+        <span>Successfully</span>
+      </div>
+      <div id="okName" style="font-size:1.1rem; font-weight:700; color:#fff;"></div>
+      <div id="okMeta" style="font-size:.82rem; color:var(--ink-400); margin-top:4px;"></div>
+      <button type="button" class="btn-success" onclick="closeOk()" id="okBtn">OK</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let currentDoc = '';
+  let currentGrade = '1';
+  let currentLang = 'ar';
+  let currentProgram = '';
+
+  const PROGRAMS = [
+    { key: 'BIS Arabic',    icon: '💻', ar: 'BIS عربي',      en: 'BIS Arabic',      sub_ar: 'نظم المعلومات التجارية', sub_en: 'Business Information Systems' },
+    { key: 'BIS English',   icon: '🌐', ar: 'BIS إنجليزي',   en: 'BIS English',     sub_ar: 'نظم المعلومات التجارية', sub_en: 'Business Information Systems' },
+    { key: 'ABA Arabic',    icon: '📉', ar: 'ABA عربي',      en: 'ABA Arabic',      sub_ar: 'برنامج ABA',            sub_en: 'ABA Program' },
+    { key: 'ABA English',   icon: '🧮', ar: 'ABA إنجليزي',   en: 'ABA English',     sub_ar: 'برنامج ABA',            sub_en: 'ABA Program' },
+    { key: 'Arabic Trade',  icon: '📊', ar: 'تجارة عربي',    en: 'Commerce Arabic', sub_ar: 'برنامج التجارة',        sub_en: 'Commerce Program' },
+    { key: 'English Trade', icon: '📈', ar: 'تجارة إنجليزي', en: 'Commerce English',sub_ar: 'برنامج التجارة',        sub_en: 'Commerce Program' }
+  ];
+  function progLabel(key){
+    const p = PROGRAMS.find(x => x.key === key);
+    return p ? p[currentLang] : key;
+  }
+  function gradeLabel(g){ return dict[currentLang]['g' + g]; }
+
+  const dict = {
+    ar: {
+      eyebrow: "كلية التجارة · جامعة بنها",
+      title: "نظام التحقق الذكي",
+      subtitle: "بوابة الدكاترة وأعضاء هيئة التدريس",
+      lbl_username: "اسم الدكتور (اسم المستخدم)",
+      lbl_password: "كلمة السر",
+      btn_login: "تسجيل الدخول / إنشاء حساب جديد",
+      btn_logout: "تسجيل الخروج",
+      g1: "الفرقة الأولى", g2: "الفرقة الثانية", g3: "الفرقة الثالثة", g4: "الفرقة الرابعة",
+      sec_add: "إضافة طالب جديد",
+      lbl_code: "كود الطالب (ID)",
+      lbl_name: "اسم الطالب بالكامل",
+      lbl_grade: "الفرقة الدراسية",
+      lbl_spec: "التخصص / البرنامج",
+      btn_save: "حفظ الطالب",
+      sec_verify: "فحص واستعلام سريع",
+      lbl_check: "كود الطالب (ID)",
+      btn_check: "استعلام الآن",
+      sec_list: "كشف الطلاب المسجلين",
+      th_name: "اسم الطالب",
+      th_code: "الكود",
+      th_grade: "الفرقة",
+      th_spec: "التخصص",
+      th_action: "الإجراءات",
+      btn_close_qr: "إغلاق",
+      pick_title: "اختر البرنامج الدراسي",
+      pick_sub: "اضغط على البرنامج لعرض الفرق الدراسية (الأولى حتى الرابعة)",
+      btn_back: "← تغيير البرنامج",
+      students: "طالب",
+      imp_title: "استيراد طلاب من شيت إكسل",
+      imp_hint: "اختار ملف Excel أو CSV فيه عمود للكود وعمود لاسم الطالب. هيتضافوا مباشرة للبرنامج والفرقة المفتوحين دلوقتي، والمكرر بيتخطى.",
+      imp_done: "تم استيراد ",
+      imp_skipped: " (تخطي مكرر: ",
+      imp_none: "مفيش طلاب صالحين للاستيراد في الملف!",
+      imp_err: "تعذر قراءة الملف!",
+      imp_nolib: "محتاج إنترنت لتشغيل قارئ Excel (أو استخدم ملف CSV)",
+      scan_btn: "مسح QR",
+      scan_title: "مسح كود QR",
+      scan_hint: "وجّه الكاميرا ناحية كود الطالب",
+      scan_cancel: "إلغاء",
+      scan_err: "تعذر تشغيل الكاميرا، اسمح للموقع باستخدامها",
+      scan_invalid: "الكود ده مش تابع للنظام!",
+      empty_list: "لا يوجد طلاب مسجلين في هذه الفرقة",
+      btn_qr: "رمز QR",
+      btn_del: "حذف",
+      msg_registered: "تم إنشاء حساب جديد بنجاح وتأمين كلمة السر!",
+      msg_wrong_pass: "كلمة السر غير صحيحة!",
+      msg_fill: "يرجى كتابة الكود والاسم!",
+      msg_fill_auth: "برجاء كتابة اسم المستخدم وكلمة السر!",
+      msg_exists: "كود الطالب مسجل بالفعل في هذه الفرقة!",
+      msg_saved: "تم حفظ الطالب بنجاح!",
+      msg_deleted: "تم حذف الطالب",
+      msg_found: "الطالب مقيد: ",
+      msg_not_found: "غير موجود في كشف هذه الفرقة!"
+    },
+    en: {
+      eyebrow: "Faculty of Commerce · Benha University",
+      title: "Smart Verification System",
+      subtitle: "Doctor & Faculty Portal",
+      lbl_username: "Doctor Name (Username)",
+      lbl_password: "Password",
+      btn_login: "Sign In / Register Account",
+      btn_logout: "Sign Out",
+      g1: "1st Year", g2: "2nd Year", g3: "3rd Year", g4: "4th Year",
+      sec_add: "Add New Student",
+      lbl_code: "Student ID Code",
+      lbl_name: "Full Name",
+      lbl_grade: "Academic Year",
+      lbl_spec: "Specialization / Major",
+      btn_save: "Save Student",
+      sec_verify: "Quick Search & Verify",
+      lbl_check: "Student ID Code",
+      btn_check: "Verify Now",
+      sec_list: "Registered Students List",
+      th_name: "Student Name",
+      th_code: "ID Code",
+      th_grade: "Year",
+      th_spec: "Major",
+      th_action: "Actions",
+      btn_close_qr: "Close",
+      pick_title: "Choose a Program",
+      pick_sub: "Tap a program to view its academic years (1st to 4th)",
+      btn_back: "← Change Program",
+      students: "students",
+      imp_title: "Import Students from Excel",
+      imp_hint: "Choose an Excel or CSV file with an ID column and a name column. Students are added directly to the currently open program and year; duplicates are skipped.",
+      imp_done: "Imported ",
+      imp_skipped: " (duplicates skipped: ",
+      imp_none: "No valid students found in the file!",
+      imp_err: "Could not read the file!",
+      imp_nolib: "Internet is needed for the Excel reader (or use a CSV file)",
+      scan_btn: "Scan QR",
+      scan_title: "Scan QR Code",
+      scan_hint: "Point the camera at the student's code",
+      scan_cancel: "Cancel",
+      scan_err: "Could not start the camera, please allow access",
+      scan_invalid: "This code does not belong to the system!",
+      empty_list: "No students registered in this year grade",
+      btn_qr: "QR Code",
+      btn_del: "Delete",
+      msg_registered: "New account created & password secured successfully!",
+      msg_wrong_pass: "Incorrect password!",
+      msg_fill: "Please enter both ID and Name!",
+      msg_fill_auth: "Please enter username and password!",
+      msg_exists: "Student ID already exists in this grade!",
+      msg_saved: "Student saved successfully!",
+      msg_deleted: "Student deleted",
+      msg_found: "Verified Student: ",
+      msg_not_found: "Not found in this grade registry!"
+    }
+  };
+
+  function toggleLang() {
+    currentLang = currentLang === 'ar' ? 'en' : 'ar';
+    document.getElementById('htmlTag').setAttribute('dir', currentLang === 'ar' ? 'rtl' : 'ltr');
+    document.getElementById('langBtn').textContent = currentLang === 'ar' ? 'English' : 'عربي';
+    const langBtnApp = document.getElementById('langBtnApp');
+    if(langBtnApp) langBtnApp.textContent = currentLang === 'ar' ? 'English' : 'عربي';
+    applyLanguage();
+    renderTable();
+  }
+
+  function applyLanguage() {
+    const t = dict[currentLang];
+    document.getElementById('t_eyebrow').textContent = t.eyebrow;
+    document.getElementById('t_title').textContent = t.title;
+    document.getElementById('t_subtitle').textContent = t.subtitle;
+    document.getElementById('t_lbl_username').textContent = t.lbl_username;
+    document.getElementById('t_lbl_password').textContent = t.lbl_password;
+    document.getElementById('t_btn_login').textContent = t.btn_login;
+    const btnLogout = document.getElementById('t_btn_logout');
+    if(btnLogout) btnLogout.textContent = t.btn_logout;
+
+    document.getElementById('g1').textContent = t.g1;
+    document.getElementById('g2').textContent = t.g2;
+    document.getElementById('g3').textContent = t.g3;
+    document.getElementById('g4').textContent = t.g4;
+
+    document.getElementById('t_sec_add').textContent = t.sec_add;
+    document.getElementById('t_lbl_code').textContent = t.lbl_code;
+    document.getElementById('t_lbl_name').textContent = t.lbl_name;
+    document.getElementById('t_btn_save').textContent = t.btn_save;
+
+    document.getElementById('t_sec_verify').textContent = t.sec_verify;
+    document.getElementById('t_lbl_check').textContent = t.lbl_check;
+    document.getElementById('t_btn_check').textContent = t.btn_check;
+
+    document.getElementById('t_sec_list').textContent = t.sec_list;
+    document.getElementById('t_th_name').textContent = t.th_name;
+    document.getElementById('t_th_code').textContent = t.th_code;
+    document.getElementById('t_th_grade').textContent = t.th_grade;
+    document.getElementById('t_th_spec').textContent = t.th_spec;
+    document.getElementById('t_th_action').textContent = t.th_action;
+    document.getElementById('t_btn_close_qr').textContent = t.btn_close_qr;
+    document.getElementById('t_pick_title').textContent = t.pick_title;
+    document.getElementById('t_pick_sub').textContent = t.pick_sub;
+    document.getElementById('t_btn_back').textContent = t.btn_back;
+    document.getElementById('t_imp_title').textContent = t.imp_title;
+    document.getElementById('t_imp_hint').textContent = t.imp_hint;
+    document.getElementById('t_btn_scan').textContent = '📷 ' + t.scan_btn;
+    document.getElementById('t_scan_title').textContent = t.scan_title;
+    document.getElementById('t_scan_hint').textContent = t.scan_hint;
+    document.getElementById('t_btn_scan_cancel').textContent = t.scan_cancel;
+    renderPrograms();
+    updateContext();
+
+    document.getElementById('sideCollege').textContent = currentLang === 'ar' ? 'كلية التجارة - جامعة بنها' : 'Faculty of Commerce - Benha University';
+    document.getElementById('sideUni').textContent = currentLang === 'ar' ? 'نظام إدارة وتحقق بيانات الطلاب الذكي' : 'Smart Student Verification & Management System';
+    applyAttLang();
+    updateAuthUI();
+  }
+
+  function renderPrograms(){
+    const grid = document.getElementById('programGrid');
+    const db = getDB();
+    const t = dict[currentLang];
+    grid.innerHTML = '';
+    PROGRAMS.forEach(p => {
+      const n = (db.students || []).filter(s => s.spec === p.key).length;
+      const el = document.createElement('div');
+      el.className = 'program-card';
+      el.onclick = () => selectProgram(p.key);
+      el.innerHTML = '<div class="p-icon">' + p.icon + '</div>' +
+        '<div class="p-name">' + p[currentLang] + '</div>' +
+        '<div class="p-sub">' + p['sub_' + currentLang] + '</div>' +
+        '<div class="p-count">' + n + ' ' + t.students + '</div>';
+      grid.appendChild(el);
+    });
+  }
+
+  function updateContext(){
+    const badge = document.getElementById('progBadge');
+    const ctx = document.getElementById('ctxLine');
+    if(!currentProgram){ badge.textContent = ''; ctx.textContent = ''; return; }
+    badge.textContent = progLabel(currentProgram);
+    ctx.textContent = progLabel(currentProgram) + ' · ' + gradeLabel(currentGrade);
+  }
+
+  function selectProgram(key){
+    currentProgram = key;
+    document.getElementById('programPicker').classList.add('hidden');
+    document.getElementById('workArea').classList.remove('hidden');
+    document.getElementById('verifyResult').innerHTML = '';
+    changeGrade('1');
+  }
+
+  function backToPrograms(){
+    currentProgram = '';
+    document.getElementById('workArea').classList.add('hidden');
+    document.getElementById('programPicker').classList.remove('hidden');
+    renderPrograms();
+    updateContext();
+  }
+
+  function toast(msg, type='success'){
+    const host = document.getElementById('toastHost');
+    const el = document.createElement('div');
+    el.className = 'toast ' + type;
+    el.textContent = msg;
+    host.appendChild(el);
+    setTimeout(() => el.remove(), 2500);
+  }
+
+  function getDB(){
+    try {
+      return JSON.parse(localStorage.getItem('benha_system_db') || '{"doctors":{}, "students":[]}');
+    } catch(e) {
+      return {"doctors":{}, "students":[]};
+    }
+  }
+
+  function saveDB(db){
+    try {
+      localStorage.setItem('benha_system_db', JSON.stringify(db));
+    } catch(e) {}
+  }
+
+  /* ================= الحسابات (اسم مستخدم + كلمة سر بهاش) ================= */
+  const authDict = {
+    ar: {
+      welcome: 'أهلاً د. ', btn_enter: 'دخول', btn_login: 'تسجيل الدخول', btn_register: 'إنشاء الحساب',
+      link_switch: 'مش أنت؟ تغيير المستخدم', link_to_register: 'ليس لديك حساب؟ إنشاء حساب جديد', link_to_login: 'لديّ حساب بالفعل؟ تسجيل الدخول',
+      lbl_pass2: 'تأكيد كلمة السر', lbl_pass_new: 'كلمة سر جديدة (6 أحرف على الأقل)',
+      err_short: 'كلمة السر لازم تكون 6 أحرف على الأقل!', err_mismatch: 'كلمتا السر غير متطابقتين!',
+      err_taken: 'اسم المستخدم ده مستخدم قبل كده، اختار اسم تاني!', err_nouser: 'مفيش حساب بالاسم ده، أنشئ حساب جديد!',
+      err_locked: 'محاولات كتير غلط، جرّب بعد ثواني: ', ok_upgraded: 'تم تأمين كلمة السر'
+    },
+    en: {
+      welcome: 'Welcome Dr. ', btn_enter: 'Enter', btn_login: 'Sign In', btn_register: 'Create Account',
+      link_switch: 'Not you? Switch user', link_to_register: "Don't have an account? Create one", link_to_login: 'Already have an account? Sign in',
+      lbl_pass2: 'Confirm Password', lbl_pass_new: 'New password (min 6 characters)',
+      err_short: 'Password must be at least 6 characters!', err_mismatch: 'Passwords do not match!',
+      err_taken: 'This username is already taken, choose another!', err_nouser: 'No account with this name, create a new one!',
+      err_locked: 'Too many wrong attempts, try again in seconds: ', ok_upgraded: 'Password secured'
+    }
+  };
+  function AU(k){ return authDict[currentLang][k]; }
+
+  function sha256(msg){
+    const K = [], H = [];
+    const isP = n => { for(let i = 2; i * i <= n; i++) if(n % i === 0) return false; return true; };
+    for(let n = 2, c = 0; c < 64; n++){
+      if(!isP(n)) continue;
+      K[c] = (Math.pow(n, 1/3) % 1 * 4294967296) | 0;
+      if(c < 8) H[c] = (Math.pow(n, 1/2) % 1 * 4294967296) | 0;
+      c++;
+    }
+    const l = msg.length, padLen = ((l + 9 + 63) >> 6) << 6;
+    const buf = new Uint8Array(padLen); buf.set(msg); buf[l] = 0x80;
+    const dv = new DataView(buf.buffer);
+    dv.setUint32(padLen - 8, Math.floor(l * 8 / 4294967296));
+    dv.setUint32(padLen - 4, (l * 8) >>> 0);
+    const w = new Int32Array(64);
+    let h = H.slice();
+    for(let off = 0; off < padLen; off += 64){
+      for(let i = 0; i < 16; i++) w[i] = dv.getInt32(off + i * 4);
+      for(let i = 16; i < 64; i++){
+        const x = w[i-15], y = w[i-2];
+        const s0 = ((x >>> 7) | (x << 25)) ^ ((x >>> 18) | (x << 14)) ^ (x >>> 3);
+        const s1 = ((y >>> 17) | (y << 15)) ^ ((y >>> 19) | (y << 13)) ^ (y >>> 10);
+        w[i] = (w[i-16] + s0 + w[i-7] + s1) | 0;
+      }
+      let [a, b, c, d, e, f, g, hh] = h;
+      for(let i = 0; i < 64; i++){
+        const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+        const ch = (e & f) ^ (~e & g);
+        const t1 = (hh + S1 + ch + K[i] + w[i]) | 0;
+        const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+        const maj = (a & b) ^ (a & c) ^ (b & c);
+        const t2 = (S0 + maj) | 0;
+        hh = g; g = f; f = e; e = (d + t1) | 0; d = c; c = b; b = a; a = (t1 + t2) | 0;
+      }
+      h = [(h[0]+a)|0, (h[1]+b)|0, (h[2]+c)|0, (h[3]+d)|0, (h[4]+e)|0, (h[5]+f)|0, (h[6]+g)|0, (h[7]+hh)|0];
+    }
+    const out = new Uint8Array(32), odv = new DataView(out.buffer);
+    h.forEach((v, i) => odv.setInt32(i * 4, v));
+    return out;
+  }
+  const PASS_ITER = 20000;
+  function toHex(u8){ return Array.from(u8).map(b => b.toString(16).padStart(2, '0')).join(''); }
+  function hashPass(pass, salt, iter){
+    const data = new TextEncoder().encode(salt + ':' + pass);
+    let h = sha256(data);
+    for(let i = 0; i < iter; i++){
+      const t = new Uint8Array(h.length + data.length);
+      t.set(h); t.set(data, h.length);
+      h = sha256(t);
+    }
+    return toHex(h);
+  }
+  function newSalt(){ const r = new Uint8Array(16); crypto.getRandomValues(r); return toHex(r); }
+  function safeEq(a, b){ if(a.length !== b.length) return false; let d = 0; for(let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i); return d === 0; }
+
+  let authMode = null;   // 'remembered' | 'login' | 'register'
+  function lsGet(k){ try { return localStorage.getItem(k); } catch(e) { return null; } }
+  function lsSet(k, v){ try { localStorage.setItem(k, v); } catch(e) {} }
+  function lsDel(k){ try { localStorage.removeItem(k); } catch(e) {} }
+
+  function rememberedDoc(){
+    const key = lsGet('benha_last_doc');
+    const db = getDB();
+    if(key && db.doctors && db.doctors[key]){
+      const rec = db.doctors[key];
+      return { key, name: (typeof rec === 'object' && rec.name) ? rec.name : key };
+    }
+    return null;
+  }
+
+  function updateAuthUI(){
+    if(!authMode){
+      const db = getDB();
+      authMode = rememberedDoc() ? 'remembered' : (Object.keys(db.doctors || {}).length ? 'login' : 'register');
+    }
+    const rem = authMode === 'remembered';
+    document.getElementById('authUserBox').classList.toggle('hidden', rem);
+    document.getElementById('authConfirmBox').classList.toggle('hidden', authMode !== 'register');
+    const wel = document.getElementById('authWelcome');
+    wel.classList.toggle('hidden', !rem);
+    if(rem) wel.textContent = AU('welcome') + rememberedDoc().name;
+    document.getElementById('t_lbl_password2').textContent = AU('lbl_pass2');
+    document.getElementById('t_lbl_password').textContent = authMode === 'register' ? AU('lbl_pass_new') : dict[currentLang].lbl_password;
+    document.getElementById('t_btn_login').textContent = rem ? AU('btn_enter') : (authMode === 'register' ? AU('btn_register') : AU('btn_login'));
+    document.getElementById('authLink').textContent = rem ? AU('link_switch') : (authMode === 'register' ? AU('link_to_login') : AU('link_to_register'));
+    document.getElementById('docPass').autocomplete = authMode === 'register' ? 'new-password' : 'current-password';
+  }
+  function setAuthMode(m){
+    authMode = m;
+    document.getElementById('authErr').textContent = '';
+    document.getElementById('docPass').value = '';
+    document.getElementById('docPass2').value = '';
+    updateAuthUI();
+  }
+  function authLinkClick(e){
+    e.preventDefault();
+    if(authMode === 'remembered'){ lsDel('benha_last_doc'); setAuthMode('login'); }
+    else setAuthMode(authMode === 'register' ? 'login' : 'register');
+  }
+
+  function enterApp(key, name){
+    currentDoc = key;
+    document.getElementById('docBadge').textContent = (currentLang === 'ar' ? 'د. ' : 'Dr. ') + name;
+    document.getElementById('authScreen').style.display = 'none';
+    document.getElementById('mainApp').classList.remove('hidden');
+    ['docPass', 'docPass2'].forEach(id => { document.getElementById(id).value = ''; });
+    renderTable();
+    renderAtt();
+  }
+
+  function handleAuth(){
+    const errEl = document.getElementById('authErr');
+    errEl.textContent = '';
+    const t = dict[currentLang];
+    const pass = document.getElementById('docPass').value;
+    let key, name;
+
+    if(authMode === 'remembered'){
+      const r = rememberedDoc();
+      if(!r){ setAuthMode('login'); return; }
+      key = r.key; name = r.name;
+    } else {
+      name = document.getElementById('docName').value.trim();
+      key = name.toLowerCase();
+    }
+    if(!key || !pass){ errEl.textContent = t.msg_fill_auth; return; }
+
+    const db = getDB();
+    if(!db.doctors) db.doctors = {};
+
+    // قفل مؤقت بعد محاولات غلط كتير
+    const fk = 'benha_fail_' + key;
+    let fail = {}; try { fail = JSON.parse(lsGet(fk) || '{}'); } catch(e) { fail = {}; }
+    if(fail.until && Date.now() < fail.until){
+      errEl.textContent = AU('err_locked') + Math.ceil((fail.until - Date.now()) / 1000);
+      return;
+    }
+
+    if(authMode === 'register'){
+      if(db.doctors[key]){ errEl.textContent = AU('err_taken'); return; }
+      if(pass.length < 6){ errEl.textContent = AU('err_short'); return; }
+      if(pass !== document.getElementById('docPass2').value){ errEl.textContent = AU('err_mismatch'); return; }
+      const salt = newSalt();
+      db.doctors[key] = { name, salt, iter: PASS_ITER, hash: hashPass(pass, salt, PASS_ITER), created: Date.now() };
+      saveDB(db);
+      lsSet('benha_last_doc', key);
+      toast(t.msg_registered, 'success');
+      enterApp(key, name);
+      return;
+    }
+
+    const rec = db.doctors[key];
+    if(!rec){ errEl.textContent = AU('err_nouser'); return; }
+
+    let ok = false;
+    if(typeof rec === 'string'){
+      // حساب قديم كان محفوظ كنص عادي: نتحقق ثم نحوّله لهاش
+      ok = safeEq(rec, pass);
+      if(ok){
+        const salt = newSalt();
+        db.doctors[key] = { name: key, salt, iter: PASS_ITER, hash: hashPass(pass, salt, PASS_ITER), created: Date.now() };
+        saveDB(db);
+        name = key;
+      }
+    } else {
+      ok = safeEq(rec.hash, hashPass(pass, rec.salt, rec.iter || PASS_ITER));
+      name = rec.name || key;
+    }
+
+    if(!ok){
+      fail.n = (fail.n || 0) + 1;
+      if(fail.n >= 5){ fail.until = Date.now() + 30000; fail.n = 0; }
+      lsSet(fk, JSON.stringify(fail));
+      errEl.textContent = t.msg_wrong_pass;
+      return;
+    }
+    lsDel(fk);
+    lsSet('benha_last_doc', key);
+    enterApp(key, name);
+  }
+
+  function logout(){
+    currentDoc = '';
+    backToPrograms();
+    document.getElementById('mainApp').classList.add('hidden');
+    document.getElementById('authScreen').style.display = 'block';
+    document.getElementById('authErr').textContent = '';
+    authMode = null;
+    setAuthMode(rememberedDoc() ? 'remembered' : 'login');
+  }
+
+  function changeGrade(g){
+    currentGrade = g;
+    for(let i=1; i<=4; i++){
+      document.getElementById('g'+i).classList.toggle('active', String(i)===g);
+    }
+    document.getElementById('verifyResult').innerHTML = '';
+    updateContext();
+    renderTable();
+    renderAtt();
+  }
+
+  function addStudent(){
+    const id = document.getElementById('stId').value.trim();
+    const name = document.getElementById('stName').value.trim();
+    const grade = currentGrade;
+    const spec = currentProgram;
+    const t = dict[currentLang];
+
+    if(!id || !name){
+      toast(t.msg_fill, 'error');
+      return;
+    }
+
+    const db = getDB();
+    if(!db.students) db.students = [];
+
+    const exists = db.students.some(s => s.id === id && s.grade === grade && s.spec === spec);
+    if(exists){
+      toast(t.msg_exists, 'error');
+      return;
+    }
+
+    db.students.push({ id, name, grade, spec, addedBy: currentDoc, addedAt: Date.now() });
+    saveDB(db);
+
+    document.getElementById('stId').value = '';
+    document.getElementById('stName').value = '';
+    toast(t.msg_saved, 'success');
+    renderTable();
+    renderPrograms();
+  }
+
+  function verifyStudent(){
+    const id = document.getElementById('checkId').value.trim();
+    const resultEl = document.getElementById('verifyResult');
+    const t = dict[currentLang];
+
+    if(!id){
+      resultEl.textContent = '';
+      return;
+    }
+
+    const db = getDB();
+    const student = db.students ? db.students.find(s => s.id === id && s.grade === currentGrade && s.spec === currentProgram) : null;
+
+    if(student){
+      resultEl.innerHTML = '<span style="color:var(--success);">' + t.msg_found + escapeHtml(student.name) + ' — ' + progLabel(student.spec) + '</span>';
+    } else {
+      resultEl.innerHTML = '<span style="color:var(--danger);">' + t.msg_not_found + '</span>';
+    }
+  }
+
+  function renderTable(){
+    const db = getDB();
+    const tbody = document.getElementById('tableBody');
+    const t = dict[currentLang];
+    tbody.innerHTML = '';
+
+    const list = (db.students || []).filter(s => s.grade === currentGrade && s.spec === currentProgram);
+
+    if(list.length === 0){
+      const tr = document.createElement('tr');
+      tr.innerHTML = '<td colspan="6" style="text-align:center; color:var(--ink-400); padding:20px;">' + t.empty_list + '</td>';
+      tbody.appendChild(tr);
+      return;
+    }
+
+    list.forEach((s, idx) => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${idx + 1}</td>
+        <td>${escapeHtml(s.name)}</td>
+        <td class="mono">${escapeHtml(s.id)}</td>
+        <td>${gradeLabel(s.grade)}</td>
+        <td>${progLabel(s.spec)}</td>
+        <td style="text-align:center;">
+          <button type="button" class="btn-blue btn-sm" onclick="showQR('${escapeHtml(s.id)}')">${t.btn_qr}</button>
+          <button type="button" class="btn-danger btn-sm" onclick="deleteStudent('${escapeHtml(s.id)}')">${t.btn_del}</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function showQR(id){
+    const db = getDB();
+    const student = db.students ? db.students.find(s => s.id === id && s.grade === currentGrade && s.spec === currentProgram) : null;
+    if(!student) return;
+
+    document.getElementById('qrName').textContent = student.name;
+    document.getElementById('qrMeta').textContent = gradeLabel(student.grade) + ' · ' + progLabel(student.spec);
+    document.getElementById('qrIdDisplay').textContent = student.id;
+
+    const qrData = makeQrPayload(student);
+    const img = document.getElementById('qrImage');
+    img.onerror = null;
+    let done = false;
+    try {
+      if (typeof qrcode !== 'undefined') {
+        if (qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) {
+          qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+        }
+        const qr = qrcode(0, 'M');
+        qr.addData(qrData);
+        qr.make();
+        img.src = qr.createDataURL(6, 2);
+        done = true;
+      }
+    } catch (e) { done = false; }
+    if (!done) {
+      img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(qrData);
+    }
+
+    document.getElementById('qrModal').classList.remove('hidden');
+  }
+
+  function makeQrPayload(s){
+    return ['BENHA', s.id, String(s.name).replace(/\|/g, ' '), s.grade, s.spec].join('|');
+  }
+
+  /* ===== مسح QR ===== */
+  let scanStream = null, scanTimer = null, scanDetector = null;
+
+  async function startScan(){
+    const t = dict[currentLang];
+    const hasNative = ('BarcodeDetector' in window);
+    const hasJsQR = (typeof jsQR !== 'undefined');
+    if(!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia || (!hasNative && !hasJsQR)){
+      toast(t.scan_err, 'error');
+      return;
+    }
+    try {
+      scanStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: 'environment' } } });
+    } catch(e) {
+      toast(t.scan_err, 'error');
+      return;
+    }
+    const v = document.getElementById('scanVideo');
+    v.srcObject = scanStream;
+    try { await v.play(); } catch(e) {}
+    document.getElementById('scanModal').classList.remove('hidden');
+
+    scanDetector = null;
+    if(hasNative){
+      try { scanDetector = new BarcodeDetector({ formats: ['qr_code'] }); } catch(e) { scanDetector = null; }
+    }
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
+    scanTimer = setInterval(async () => {
+      if(v.readyState < 2 || !v.videoWidth) return;
+      let text = null;
+      try {
+        if(scanDetector){
+          const codes = await scanDetector.detect(v);
+          if(codes.length) text = codes[0].rawValue;
+        } else if(typeof jsQR !== 'undefined'){
+          canvas.width = v.videoWidth; canvas.height = v.videoHeight;
+          ctx.drawImage(v, 0, 0, canvas.width, canvas.height);
+          const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+          const r = jsQR(imgData.data, imgData.width, imgData.height);
+          if(r) text = r.data;
+        }
+      } catch(e) {}
+      if(text){ stopScan(); handleScanned(text); }
+    }, 300);
+  }
+
+  function stopScan(){
+    if(scanTimer){ clearInterval(scanTimer); scanTimer = null; }
+    if(scanStream){ scanStream.getTracks().forEach(tr => tr.stop()); scanStream = null; }
+    const v = document.getElementById('scanVideo');
+    if(v) v.srcObject = null;
+    document.getElementById('scanModal').classList.add('hidden');
+  }
+
+  function safeDecode(x){ try { return decodeURIComponent(x); } catch(e) { return x; } }
+
+  function handleScanned(text){
+    const attParts = extractAtt(text);
+    if(attParts){ onAttScanned(attParts); return; }
+    const t = dict[currentLang];
+    const resultEl = document.getElementById('verifyResult');
+    const parts = String(text).split('|');
+    if(parts[0] !== 'BENHA' && parts[0] !== 'BenhaUni'){
+      toast(t.scan_invalid, 'error');
+      resultEl.innerHTML = '<span style="color:var(--danger);">' + t.scan_invalid + '</span>';
+      return;
+    }
+    const id = (parts[1] || '').trim();
+    const grade = parts[3];
+    const spec = safeDecode(parts[4] || '');
+    const db = getDB();
+    const list = db.students || [];
+    const student = list.find(s => s.id === id && s.grade === grade && s.spec === spec) || list.find(s => s.id === id);
+    if(student){
+      resultEl.innerHTML = '<span style="color:var(--success);">' + t.msg_found + escapeHtml(student.name) + ' — ' + progLabel(student.spec) + ' · ' + gradeLabel(student.grade) + '</span>';
+      toast(t.msg_found + student.name, 'success');
+    } else {
+      resultEl.innerHTML = '<span style="color:var(--danger);">' + t.msg_not_found + '</span>';
+      toast(t.msg_not_found, 'error');
+    }
+  }
+
+  /* ===== استيراد Excel / CSV ===== */
+  function parseCSV(text){
+    const rows = [];
+    text.replace(/^\uFEFF/, '').split(/\r?\n/).forEach(line => {
+      if(!line.trim()) return;
+      const sep = line.includes('\t') ? '\t' : (line.includes(';') && !line.includes(',') ? ';' : ',');
+      rows.push(line.split(sep).map(c => c.replace(/^"|"$/g, '').trim()));
+    });
+    return rows;
+  }
+
+  function cellStr(v){
+    return String(v === undefined || v === null ? '' : v).trim().replace(/^(\d+)\.0+$/, '$1');
+  }
+
+  function importExcel(input){
+    const file = input.files && input.files[0];
+    const t = dict[currentLang];
+    if(!file || !currentProgram) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      let rows = [];
+      try {
+        if(typeof XLSX !== 'undefined'){
+          const wb = XLSX.read(new Uint8Array(e.target.result), { type: 'array' });
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          rows = XLSX.utils.sheet_to_json(ws, { header: 1, raw: false, defval: '' });
+        } else if(/\.csv$/i.test(file.name)){
+          rows = parseCSV(new TextDecoder('utf-8').decode(e.target.result));
+        } else {
+          toast(t.imp_nolib, 'error');
+          input.value = '';
+          return;
+        }
+      } catch(err) {
+        toast(t.imp_err, 'error');
+        input.value = '';
+        return;
+      }
+      processRows(rows);
+      input.value = '';
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  function processRows(rows){
+    const t = dict[currentLang];
+    let codeCol = -1, nameCol = -1, start = 0;
+
+    // 1) البحث عن صف العناوين
+    for(let r = 0; r < Math.min(rows.length, 8) && codeCol < 0; r++){
+      const row = rows[r] || [];
+      let c = -1, n = -1;
+      row.forEach((cell, i) => {
+        const s = cellStr(cell);
+        if(n < 0 && /(اسم|name)/i.test(s)) n = i;
+        else if(c < 0 && /(كود|code|\bid\b|رقم)/i.test(s)) c = i;
+      });
+      if(c >= 0 && n >= 0){ codeCol = c; nameCol = n; start = r + 1; }
+    }
+
+    // 2) لو مفيش عناوين: أول صف فيه خلية رقمية وخلية نصية
+    if(codeCol < 0){
+      for(let r = 0; r < rows.length; r++){
+        const row = (rows[r] || []).map(cellStr).map((v, i) => ({ v, i })).filter(x => x.v);
+        if(row.length < 2) continue;
+        const numeric = row.filter(x => /^\d{3,}$/.test(x.v));
+        const text = row.filter(x => !/^\d+$/.test(x.v));
+        if(numeric.length >= 1 && text.length >= 1){
+          codeCol = numeric[0].i; nameCol = text[0].i; start = r;
+          break;
+        }
+      }
+    }
+    if(codeCol < 0){ toast(t.imp_none, 'error'); return; }
+
+    const db = getDB();
+    if(!db.students) db.students = [];
+    let added = 0, skipped = 0;
+    for(let r = start; r < rows.length; r++){
+      const row = rows[r] || [];
+      const id = cellStr(row[codeCol]);
+      const name = cellStr(row[nameCol]);
+      if(!id || !name) continue;
+      const exists = db.students.some(s => s.id === id && s.grade === currentGrade && s.spec === currentProgram);
+      if(exists){ skipped++; continue; }
+      db.students.push({ id, name, grade: currentGrade, spec: currentProgram, addedBy: currentDoc, addedAt: Date.now() });
+      added++;
+    }
+    if(added === 0 && skipped === 0){ toast(t.imp_none, 'error'); return; }
+    saveDB(db);
+    toast(t.imp_done + added + (skipped ? t.imp_skipped + skipped + ')' : ''), 'success');
+    renderTable();
+    renderPrograms();
+  }
+
+  function deleteStudent(id){
+    const db = getDB();
+    if(!db.students) return;
+    db.students = db.students.filter(s => !(s.id === id && s.grade === currentGrade && s.spec === currentProgram));
+    saveDB(db);
+    toast(dict[currentLang].msg_deleted, 'success');
+    renderTable();
+    renderPrograms();
+  }
+
+  function escapeHtml(text){
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  /* ================= Attendance (QR يتغير كل دقيقة) ================= */
+  const ATT_WINDOW = 60000;
+  const attDict = {
+    ar: {
+      title: 'تسجيل الحضور بالـ QR', lecture_lbl: 'اسم المحاضرة / المادة (اختياري)', lecture_ph: 'مثال: محاسبة مالية - محاضرة 3',
+      start: '▶ بدء أخذ الحضور', end: '⏹ إنهاء الحضور', export: '📥 تصدير شيت Excel',
+      student_mode: '🎓 وضع الطالب: تسجيل حضور', live: 'الحضور مفتوح الآن', changes_in: 'الكود يتغير بعد', sec: 'ثانية',
+      present: 'عدد الحاضرين', th_name: 'اسم الطالب', th_code: 'الكود', th_time: 'وقت التسجيل',
+      pill_live: 'جارية', pill_done: 'انتهت', empty: 'لم يسجل أي طالب حضوره بعد',
+      st_title: 'تسجيل حضور الطالب', st_hint2: 'تم مسح الكود ✔ اكتب كودك (ID) وأكّد الحضور', st_id: 'كود الطالب (ID)', st_hint: 'امسح الـ QR المعروض عند الدكتور، وبعدها اكتب كودك وأكّد',
+      scan_att: '📷 مسح كود الحضور', confirm: '✔ تأكيد تسجيل الحضور', close: 'إغلاق',
+      registered: 'سجّل حضوره', ok_meta_prefix: '',
+      err_id: 'اكتب كود الطالب الأول', err_nosession: 'جلسة الحضور دي مش موجودة', err_closed: 'الحضور اتقفل',
+      err_expired: 'الكود انتهت صلاحيته، امسح الكود الجديد', err_notenrolled: 'كودك مش مسجل في الفرقة/البرنامج ده',
+      err_dup: 'حضورك متسجل قبل كده', started: 'تم بدء الحضور', ended: 'تم إنهاء الحضور',
+      x_sheet: 'الحضور', x_prog: 'البرنامج', x_grade: 'الفرقة', x_subject: 'المحاضرة', x_date: 'التاريخ', x_doc: 'الدكتور',
+      x_summary: 'الحاضرون / الإجمالي', x_no: 'م', x_code: 'الكود', x_name: 'اسم الطالب', x_status: 'الحالة', x_time: 'وقت الحضور',
+      x_p: 'حاضر', x_a: 'غائب'
+    },
+    en: {
+      title: 'QR Attendance', lecture_lbl: 'Lecture / Subject name (optional)', lecture_ph: 'e.g. Financial Accounting - Lecture 3',
+      start: '▶ Start Attendance', end: '⏹ End Attendance', export: '📥 Export Excel Sheet',
+      student_mode: '🎓 Student Mode: Check In', live: 'Attendance is open', changes_in: 'Code changes in', sec: 'sec',
+      present: 'Present', th_name: 'Student Name', th_code: 'ID Code', th_time: 'Check-in Time',
+      pill_live: 'Live', pill_done: 'Ended', empty: 'No student has checked in yet',
+      st_title: 'Student Check-in', st_hint2: 'Code scanned ✔ type your ID and confirm', st_id: 'Student ID Code', st_hint: "Scan the QR shown by the doctor, then type your ID and confirm",
+      scan_att: '📷 Scan Attendance Code', confirm: '✔ Confirm Attendance', close: 'Close',
+      registered: 'checked in', ok_meta_prefix: '',
+      err_id: 'Enter your student ID first', err_nosession: 'This attendance session was not found', err_closed: 'Attendance is closed',
+      err_expired: 'This code has expired, scan the new one', err_notenrolled: 'Your ID is not registered in this program/year',
+      err_dup: 'You are already checked in', started: 'Attendance started', ended: 'Attendance ended',
+      x_sheet: 'Attendance', x_prog: 'Program', x_grade: 'Year', x_subject: 'Lecture', x_date: 'Date', x_doc: 'Doctor',
+      x_summary: 'Present / Total', x_no: '#', x_code: 'ID Code', x_name: 'Student Name', x_status: 'Status', x_time: 'Check-in Time',
+      x_p: 'Present', x_a: 'Absent'
+    }
+  };
+  function A(k){ return (attDict[currentLang] && attDict[currentLang][k]) || k; }
+
+  let attView = { id: null, active: false };
+  let attLastWin = -1, attRendered = -1, attPending = null, attQrFor = '';
+
+  function cyrb53(str, seed = 0){
+    let h1 = 0xdeadbeef ^ seed, h2 = 0x41c6ce57 ^ seed;
+    for(let i = 0, ch; i < str.length; i++){
+      ch = str.charCodeAt(i);
+      h1 = Math.imul(h1 ^ ch, 2654435761);
+      h2 = Math.imul(h2 ^ ch, 1597334677);
+    }
+    h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
+    h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
+    return 4294967296 * (2097151 & h2) + (h1 >>> 0);
+  }
+  function tokenFor(sess, win){ return cyrb53(sess.secret + ':' + win).toString(36).slice(0, 8); }
+  function winOf(sess, now){ return Math.floor(((now || Date.now()) - sess.startedAt) / ATT_WINDOW); }
+  function attPayload(sess, win){ return ['BENHA-ATT', sess.id, win, tokenFor(sess, win)].join('|'); }
+  function attQrText(sess, win){
+    const raw = attPayload(sess, win);
+    if(/^https?:$/.test(location.protocol)) return location.origin + location.pathname + '?att=' + encodeURIComponent(raw);
+    return raw;
+  }
+
+  function qrDataURL(text, cell){
+    try {
+      if(typeof qrcode !== 'undefined'){
+        if(qrcode.stringToBytesFuncs && qrcode.stringToBytesFuncs['UTF-8']) qrcode.stringToBytes = qrcode.stringToBytesFuncs['UTF-8'];
+        const qr = qrcode(0, 'M'); qr.addData(text); qr.make();
+        return qr.createDataURL(cell || 6, 2);
+      }
+    } catch(e) {}
+    return 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=' + encodeURIComponent(text);
+  }
+
+  function ctxSession(){
+    if(!currentDoc || !currentProgram) return null;
+    const db = getDB();
+    const all = Object.values(db.sessions || {}).filter(x => x.doc === currentDoc && x.spec === currentProgram && x.grade === currentGrade);
+    const act = all.find(x => x.active);
+    if(act) return act;
+    all.sort((a, b) => b.startedAt - a.startedAt);
+    return all[0] || null;
+  }
+
+  function startAttendance(){
+    if(!currentDoc || !currentProgram) return;
+    const db = getDB();
+    if(!db.sessions) db.sessions = {};
+    const now = Date.now();
+    Object.values(db.sessions).forEach(x => {
+      if(x.active && x.doc === currentDoc && x.spec === currentProgram && x.grade === currentGrade){ x.active = false; x.endedAt = now; }
+    });
+    const rnd = new Uint32Array(4);
+    (window.crypto || window.msCrypto).getRandomValues(rnd);
+    const secret = Array.from(rnd).map(n => n.toString(36)).join('');
+    const id = 's' + now.toString(36) + rnd[0].toString(36).slice(0, 4);
+    db.sessions[id] = {
+      id, doc: currentDoc, spec: currentProgram, grade: currentGrade,
+      title: document.getElementById('attLecture').value.trim(),
+      secret, startedAt: now, endedAt: null, active: true, records: []
+    };
+    saveDB(db);
+    document.getElementById('attLecture').value = '';
+    toast(A('started'), 'success');
+    renderAtt();
+  }
+
+  function endAttendance(){
+    const s = ctxSession();
+    if(!s || !s.active) return;
+    const db = getDB();
+    const x = db.sessions[s.id];
+    x.active = false; x.endedAt = Date.now();
+    saveDB(db);
+    toast(A('ended'), 'success');
+    renderAtt();
+  }
+
+  function applyAttLang(){
+    document.querySelectorAll('[data-t]').forEach(el => { el.textContent = A(el.dataset.t); });
+    document.getElementById('attLecture').placeholder = A('lecture_ph');
+    renderAtt();
+  }
+
+  function renderAtt(){
+    const s = ctxSession();
+    attView = { id: s ? s.id : null, active: !!(s && s.active) };
+    attLastWin = -1; attRendered = -1; attQrFor = '';
+    document.getElementById('attStartBox').classList.toggle('hidden', attView.active);
+    document.getElementById('attLive').classList.toggle('hidden', !attView.active);
+    document.getElementById('attResult').classList.toggle('hidden', !s);
+    document.getElementById('attBody').innerHTML = '';
+    if(s) updateAtt(s);
+  }
+
+  function updateAtt(s){
+    const now = Date.now();
+    if(s.active){
+      const win = winOf(s, now);
+      if(win !== attLastWin){
+        attLastWin = win;
+        document.getElementById('attQr').src = qrDataURL(attQrText(s, win), 8);
+      }
+      const into = (now - s.startedAt) % ATT_WINDOW;
+      document.getElementById('attRemain').textContent = Math.ceil((ATT_WINDOW - into) / 1000);
+      const bar = document.getElementById('attBarFill');
+      bar.style.width = ((1 - into / ATT_WINDOW) * 100) + '%';
+      document.getElementById('attLectureName').textContent = s.title ? '· ' + s.title : '';
+    }
+    const pill = document.getElementById('attPill');
+    pill.className = 'pill ' + (s.active ? 'live' : 'done');
+    pill.textContent = A(s.active ? 'pill_live' : 'pill_done') + (s.title ? ' · ' + s.title : '');
+    const db = getDB();
+    const total = (db.students || []).filter(x => x.spec === s.spec && x.grade === s.grade).length;
+    document.getElementById('attCount').textContent = s.records.length + ' / ' + total;
+
+    if(s.records.length !== attRendered){
+      const body = document.getElementById('attBody');
+      const prev = attRendered < 0 ? s.records.length : attRendered;
+      body.innerHTML = '';
+      if(!s.records.length){
+        body.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--ink-400); padding:16px;">' + escapeHtml(A('empty')) + '</td></tr>';
+      }
+      const n = s.records.length;
+      for(let i = n - 1; i >= 0; i--){
+        const r = s.records[i];
+        const tr = document.createElement('tr');
+        if(i >= prev) tr.className = 'att-new';
+        tr.innerHTML = '<td>' + (i + 1) + '</td><td>' + escapeHtml(r.name) + '</td><td class="mono">' + escapeHtml(r.id) + '</td><td class="mono">' + new Date(r.at).toLocaleTimeString('en-GB') + '</td>';
+        body.appendChild(tr);
+      }
+      for(let i = prev; i < n; i++) toast('✔ ' + s.records[i].name + ' ' + A('registered'), 'success');
+      attRendered = n;
+    }
+  }
+
+  function attTick(){
+    const dlg = document.getElementById('attSection');
+    if(!dlg || !currentDoc || !currentProgram) return;
+    const s = ctxSession();
+    const id = s ? s.id : null, act = !!(s && s.active);
+    if(id !== attView.id || act !== attView.active){ renderAtt(); return; }
+    if(s) updateAtt(s);
+  }
+  setInterval(attTick, 1000);
+  window.addEventListener('storage', e => { if(e.key === 'benha_system_db') attTick(); });
+
+  /* ----- تصدير Excel ----- */
+  function exportAttendance(){
+    const s = ctxSession();
+    if(!s) return;
+    const db = getDB();
+    const roster = (db.students || []).filter(x => x.spec === s.spec && x.grade === s.grade);
+    const byId = {}; s.records.forEach(r => { byId[r.id] = r; });
+    // طلاب سجّلوا لكن اتحذفوا من الكشف بعدين
+    const extra = s.records.filter(r => !roster.some(x => x.id === r.id)).map(r => ({ id: r.id, name: r.name }));
+    const all = roster.concat(extra);
+    const date = new Date(s.startedAt);
+    const dateStr = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + String(date.getDate()).padStart(2, '0');
+    const top = [
+      [A('x_prog'), progLabel(s.spec)],
+      [A('x_grade'), gradeLabel(s.grade)],
+      [A('x_subject'), s.title || '-'],
+      [A('x_date'), dateStr + ' ' + date.toLocaleTimeString('en-GB')],
+      [A('x_doc'), s.doc],
+      [A('x_summary'), s.records.length + ' / ' + all.length],
+      []
+    ];
+    const head = [A('x_no'), A('x_code'), A('x_name'), A('x_status'), A('x_time')];
+    const rows = all.map((st, i) => {
+      const r = byId[st.id];
+      return [i + 1, st.id, st.name, r ? A('x_p') : A('x_a'), r ? new Date(r.at).toLocaleTimeString('en-GB') : ''];
+    });
+    const aoa = top.concat([head], rows);
+    const safe = (progLabel(s.spec) + '_' + gradeLabel(s.grade) + '_' + dateStr).replace(/[\\\/:*?"<>|\s]+/g, '_');
+    if(typeof XLSX !== 'undefined'){
+      const ws = XLSX.utils.aoa_to_sheet(aoa);
+      ws['!cols'] = [{ wch: 8 }, { wch: 16 }, { wch: 34 }, { wch: 12 }, { wch: 14 }];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, A('x_sheet'));
+      if(!wb.Workbook) wb.Workbook = {};
+      wb.Workbook.Views = [{ RTL: currentLang === 'ar' }];
+      XLSX.writeFile(wb, 'Attendance_' + safe + '.xlsx');
+    } else {
+      const csv = '\uFEFF' + aoa.map(r => r.map(c => '"' + String(c).replace(/"/g, '""') + '"').join(',')).join('\r\n');
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+      a.download = 'Attendance_' + safe + '.csv';
+      document.body.appendChild(a); a.click(); a.remove();
+    }
+  }
+
+  /* ----- جهة الطالب ----- */
+  function extractAtt(text){
+    let x = String(text || '');
+    const m = x.match(/[?&]att=([^&#]+)/);
+    if(m) x = safeDecode(m[1]);
+    return x.indexOf('BENHA-ATT|') === 0 ? x.split('|') : null;
+  }
+
+  function refreshCheckin(){
+    document.getElementById('attConfirmBtn').classList.toggle('hidden', !attPending);
+    document.getElementById('attScanBtn').classList.toggle('hidden', !!attPending);
+    document.getElementById('attHint').textContent = A(attPending ? 'st_hint2' : 'st_hint');
+  }
+  function openCheckin(){
+    document.getElementById('attStudentId').value = '';
+    refreshCheckin();
+    document.getElementById('checkinModal').classList.remove('hidden');
+    if(attPending) setTimeout(() => document.getElementById('attStudentId').focus(), 50);
+  }
+  function closeCheckin(){
+    document.getElementById('checkinModal').classList.add('hidden');
+    attPending = null;
+    if(document.body.dataset.studentOnly){ delete document.body.dataset.studentOnly; if(!currentDoc) document.getElementById('authScreen').style.display = 'block'; }
+  }
+  function studentIdValue(){ return document.getElementById('attStudentId').value.trim(); }
+  function scanForAttendance(){ startScan(); }
+  function confirmPending(){
+    if(!attPending) return;
+    const id = studentIdValue();
+    if(!id){ toast(A('err_id'), 'error'); return; }
+    submitAttendance(attPending, id);
+  }
+  // بعد مسح الكود: تظهر خانة كتابة الكود، وبعدها يتم التحقق من كشف الطلاب
+  function onAttScanned(parts){
+    attPending = parts;
+    openCheckin();
+  }
+
+  function submitAttendance(parts, studentId){
+    const fail = k => {
+      toast(A(k), 'error');
+      if(k === 'err_expired' || k === 'err_closed' || k === 'err_nosession'){ attPending = null; refreshCheckin(); }
+      return false;
+    };
+    const db = getDB();
+    const sess = (db.sessions || {})[parts[1]];
+    if(!sess) return fail('err_nosession');
+    if(!sess.active) return fail('err_closed');
+    const now = Date.now();
+    const win = parseInt(parts[2], 10);
+    const cur = winOf(sess, now);
+    const intoWin = (now - sess.startedAt) % ATT_WINDOW;
+    const okWin = win === cur || (win === cur - 1 && intoWin < 5000);   // سماح 5 ثواني عند تغيّر الكود
+    if(!okWin || parts[3] !== tokenFor(sess, win)) return fail('err_expired');
+    const st = (db.students || []).find(x => x.id === studentId && x.grade === sess.grade && x.spec === sess.spec);
+    if(!st) return fail('err_notenrolled');
+    if(sess.records.some(r => r.id === st.id)) return fail('err_dup');
+    sess.records.push({ id: st.id, name: st.name, at: now });
+    saveDB(db);
+    attPending = null;
+    document.getElementById('checkinModal').classList.add('hidden');
+    showSuccess(st, sess);
+    attTick();
+    return true;
+  }
+
+  function showSuccess(st, sess){
+    document.getElementById('okName').textContent = st.name;
+    document.getElementById('okMeta').textContent = progLabel(sess.spec) + ' · ' + gradeLabel(sess.grade) + (sess.title ? ' · ' + sess.title : '');
+    const m = document.getElementById('okModal');
+    m.classList.add('hidden'); void m.offsetWidth;   // إعادة تشغيل الأنيميشن
+    m.classList.remove('hidden');
+  }
+  function closeOk(){
+    document.getElementById('okModal').classList.add('hidden');
+    if(document.body.dataset.studentOnly){ delete document.body.dataset.studentOnly; if(!currentDoc) document.getElementById('authScreen').style.display = 'block'; }
+  }
+
+  // لو الصفحة اتفتحت من رابط الحضور (?att=...)
+  function initFromUrl(){
+    try {
+      const q = new URLSearchParams(location.search).get('att');
+      if(!q) return;
+      const parts = extractAtt('?att=' + encodeURIComponent(q));
+      if(!parts) return;
+      attPending = parts;
+      document.body.dataset.studentOnly = '1';
+      document.getElementById('authScreen').style.display = 'none';
+      openCheckin();
+    } catch(e) {}
+  }
+
+  // Init
+  applyLanguage();
+  initFromUrl();
+</script>
+
+</body>
+</html>
